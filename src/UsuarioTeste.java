@@ -6,17 +6,22 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.firefox.FirefoxDriver;
 
+import pages.UsuariosPage;
 import static org.junit.Assert.assertTrue;
 
 public class UsuarioTeste {
 	
-	WebDriver browser = new FirefoxDriver();
+	private WebDriver browser;
+	private UsuariosPage usuarios;
 	
 	@Before
 	public void inicializa(){
-		browser.get("http://localhost:8080/usuarios");
-		WebElement novoUsuario = browser.findElement(By.linkText("Novo Usuário"));
-		novoUsuario.click();
+		this.browser = new FirefoxDriver();
+		this.usuarios = new UsuariosPage(browser);
+		usuarios.acessaPagina();
+		//browser.get("http://localhost:8080/usuarios");
+		//WebElement novoUsuario = browser.findElement(By.linkText("Novo Usuário"));
+		//novoUsuario.click();
 	}
 
 	@After
@@ -27,30 +32,38 @@ public class UsuarioTeste {
 	//public static void main (String[] args){
 	@Test
 	public void deveAdicionarUsuario() {
-		WebElement nome = browser.findElement(By.name("usuario.nome"));
-		WebElement email = browser.findElement(By.name("usuario.email"));
 		
-		nome.sendKeys("Luciana Magalhães");
-		email.sendKeys("lucianams@gmail.com");
-		email.submit();
+		usuarios.novoUsuario();
+		usuarios.cadastra("Luciana Magalhães", "lucianams@gmail.com");
+		assertTrue(usuarios.existeNalistagem("Luciana Magalhães", "lucianams@gmail.com"));
 		
-		boolean achouNome = browser.getPageSource().contains("Luciana Magalhães");
-		assertTrue(achouNome);
+		//WebElement nome = browser.findElement(By.name("usuario.nome"));
+		//WebElement email = browser.findElement(By.name("usuario.email"));
+		
+		//nome.sendKeys("Luciana Magalhães");
+		//email.sendKeys("lucianams@gmail.com");
+		//email.submit();
+		
+		//boolean achouNome = browser.getPageSource().contains("Luciana Magalhães");
+		//assertTrue(achouNome);
 		
 		//System.out.println("Funcionou!!");
 	}
 	
 	@Test
 	public void deveExibirMsgUsuarioSemNomeEmail() {
-		WebElement nome = browser.findElement(By.name("usuario.nome"));
-		WebElement email = browser.findElement(By.name("usuario.email"));
-
-		nome.clear();
-		email.clear();
-		email.submit();
 		
-		boolean achouMensagem = browser.getPageSource().contains("Nome obrigatorio!");
-		assertTrue(achouMensagem);
-
+		usuarios.novoUsuario();
+		assertTrue(usuarios.nomeEmailNaoInformado());
+		
+	}
+	
+	@Test
+	public void deveExcluirUsuario() {
+		
+		assertTrue(usuarios.existeNalistagem("Luciana Magalhães", "lucianams@gmail.com"));
+		usuarios.excluirUsuario("Luciana Magalhães", "lucianams@gmail.com");
+		assertTrue(!(usuarios.existeNalistagem("Luciana Magalhães", "lucianams@gmail.com")));
+		
 	}
 }
