@@ -6,18 +6,18 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.firefox.FirefoxDriver;
 
-import pages.UsuariosPage;
+import pages.UsuarioPage;
 import static org.junit.Assert.assertTrue;
 
 public class UsuarioTeste {
 	
 	private WebDriver browser;
-	private UsuariosPage usuarios;
+	private UsuarioPage usuarios;
 	
 	@Before
 	public void inicializa(){
 		this.browser = new FirefoxDriver();
-		this.usuarios = new UsuariosPage(browser);
+		this.usuarios = new UsuarioPage(browser);
 		usuarios.acessaPagina();
 		//browser.get("http://localhost:8080/usuarios");
 		//WebElement novoUsuario = browser.findElement(By.linkText("Novo Usuário"));
